@@ -184,7 +184,7 @@ body{
     width: 100%;
   }
 
-  .btn.btn-info{
+  .iiif-av-component .btn.btn-info{
     fill: rgba(255, 255, 255, 0.7);
     cursor: pointer;
     display: inline-block;
@@ -192,6 +192,7 @@ body{
     height: 1em;
     line-height: 1em;
     order: 1;
+    padding-right: 16px;
     width: 1em;
 
     &:hover{
