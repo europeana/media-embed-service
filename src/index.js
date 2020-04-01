@@ -225,8 +225,8 @@ export const initialiseAttribution = (manifestJsonld, mediaMode) => {
 
   let attribution = $(htmlAttribution).addClass('attribution').appendTo($('.info'));
 
+  //@import url('/icons/style.css');
   attribution.append(`<style type="text/css">
-    @import url('/icons/style.css');
     .field:not(:last-child)::after{
       content: ', ';
     }
