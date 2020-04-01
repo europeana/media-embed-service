@@ -184,7 +184,7 @@ body{
     width: 100%;
   }
 
-  .iiif-av-component .btn.btn-info{
+  .btn.btn-info{
     fill: rgba(255, 255, 255, 0.7);
     cursor: pointer;
     display: inline-block;
@@ -192,7 +192,6 @@ body{
     height: 1em;
     line-height: 1em;
     order: 1;
-    padding-right: 16px;
     width: 1em;
 
     &:hover{
@@ -202,6 +201,7 @@ body{
 
   &.image .btn.btn-info{
     bottom: $def-padding;
+    fill: rgba(255, 255, 255, 0.7);
     pointer-events: all;
     position: absolute;
     right: $def-padding;
