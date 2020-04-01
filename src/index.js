@@ -198,35 +198,33 @@ export const initialiseAttribution = (manifestJsonld, mediaMode) => {
   let btnInfo = mediaMode === 'image' ? btnInfoEl.appendTo($('.info')) : btnInfoEl.insertAfter($('.time-display'));
 
   // TODO: temp code until API supplies this markup
-  /*
-  if(typeof htmlAttribution !== 'string'){
-    const generateRightsList = () => {
-      let rightItems = ['cc', 'by', 'sa'].map((key) => `<li class="icon-${key}"></li>`).join('');
-      return `<ul class="rights-list">${rightItems}</ul>`;
-    };
 
-    let testLicense = 'https://creativecommons.org/licenses/by-sa/2.0/';
-    let about      = 'https://www.europeana.eu/portal/record/2022362/_Royal_Museums_Greenwich__http___collections_rmg_co_uk_collections_objects_573492';
-    htmlAttribution = ['Title', 'Creator', 'Date', 'Institution', 'Country', 'Rights'].map((name) => {
-      return `
-        <span class="field">
-          <span class="fname">${name}</span>
-          <span class="fvalue"
-            ${name === 'Rights' ? 'property="cc:License"' : '' }
-          >${name === 'Title' ? '<a data-name="title"></a>' :
-            name === 'Institution' ? '<a href="http://europeana.eu" target="_blank" rel="noopener">' + name + ' goes here</a>' :
-            name === 'Rights' ? generateRightsList() + `<a href="${testLicense}" target="_blank" rel="noopener">Copyright</a>` :
-              name + ' goes here'}</span></span>`;
-    }).join('');
-    htmlAttribution = `<div class="attribution" about="${about}">${htmlAttribution}</div>`;
-  }
-  */
+  const generateRightsList = () => {
+    let rightItems = ['cc', 'by', 'sa'].map((key) => `<li class="icon-${key}"></li>`).join('');
+    return `<ul class="rights-list">${rightItems}</ul>`;
+  };
+
+  let testLicense = 'https://creativecommons.org/licenses/by-sa/2.0/';
+  let about      = 'https://www.europeana.eu/portal/record/2022362/_Royal_Museums_Greenwich__http___collections_rmg_co_uk_collections_objects_573492';
+  htmlAttribution = ['Title', 'Creator', 'Date', 'Institution', 'Country', 'Rights'].map((name) => {
+    return `
+      <span class="field">
+        <span class="fname">${name}</span>
+        <span class="fvalue"
+          ${name === 'Rights' ? 'property="cc:License"' : '' }
+        >${name === 'Title' ? '<a data-name="title"></a>' :
+          name === 'Institution' ? '<a href="http://europeana.eu" target="_blank" rel="noopener">' + name + ' goes here</a>' :
+          name === 'Rights' ? generateRightsList() + `<a href="${testLicense}" target="_blank" rel="noopener">Copyright</a>` :
+            name + ' goes here'}</span></span>`;
+  }).join('');
+  htmlAttribution = `<div class="attribution" about="${about}">${htmlAttribution}</div>`;
+
   // end temp code
 
   let attribution = $(htmlAttribution).addClass('attribution').appendTo($('.info'));
 
-  //@import url('/icons/style.css');
   attribution.append(`<style type="text/css">
+    @import url('/icons/style.css');
     .field:not(:last-child)::after{
       content: ', ';
     }
