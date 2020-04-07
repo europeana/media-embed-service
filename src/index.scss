@@ -31,19 +31,33 @@ body{
     line-height: 19px;
     max-height: 38px;
     overflow: hidden;
+
     &:not(:first-child){
       margin-top: 6px;
     }
-    &:not(:last-child)::after{
-      content: '';
+    .fname{
+      color: $mid-grey;
+      display: inline-block;
+      &::after{
+        content: '';
+        margin-right: 0.5em;
+      }
     }
   }
-  .fname{
-    color: $mid-grey;
-    display: inline-block;
-    &::after{
-      content: ':';
-      margin-right: 0.5em;
+
+  .rights-list{
+    display: inline;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    li{
+      display: inline;
+      margin-right: 4px;
+
+      a{
+        text-transform: uppercase;
+      }
     }
   }
 
