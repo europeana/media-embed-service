@@ -8,7 +8,7 @@
     "test": "karma start"
   },
   "dependencies": {
-    "europeanamediaplayer": "^0.5.10",
+    "europeanamediaplayer": "^0.5.16",
     "materialize-css": "^1.0.0",
     "placeload.js": "^1.0.4",
     "whatwg-fetch": "^3.0.0"

@@ -41,7 +41,6 @@ window.addEventListener('load', () => {
       if(urlParams.width && urlParams.height){
         setEmbedDimensions(urlParams.width, urlParams.height, mediaMode === 'image');
       }
-
       if(['audio', 'video'].indexOf(mediaMode) > -1){
         initialisePlayer($('.player-wrapper'), manifest, mediaMode);
       }
@@ -192,11 +191,34 @@ export const initialiseAttribution = (manifestJsonld, mediaMode) => {
 
   let svgData = '<svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"/><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>';
   let htmlAttribution = manifestJsonld.requiredStatement.en[0];
-  let btnInfoEl = $('<span class="btn btn-info">' + svgData + '</span>');
+
+  // TMP CODE TO REMOVE
+  if($(htmlAttribution).length && $(htmlAttribution).length === 2){
+    let styling = `<style type="text/css">@import url('/icons/style.css');</style>`;
+    let markup = $(htmlAttribution)[1];
+    let x = $(markup);
+    x.prepend(styling);
+    htmlAttribution = x[0].outerHTML;
+  }
+  // END TMP CODE TO REMOVE
+
+  let btnInfoEl = $('<span class="btn btn-info" data-name="Info">' + svgData + '</span>');
   let btnInfo = mediaMode === 'image' ? btnInfoEl.appendTo($('.info')) : btnInfoEl.insertAfter($('.time-display'));
   let attribution = $(htmlAttribution).addClass('attribution').appendTo($('.info'));
 
-  attribution.append(`<style type="text/css">@import url('/icons/style.css');</style>`);
+  if(player){
+    // allow other menus to close this menu
+    attribution.attr('data-opener', 'Info');
+  }
+
+  btnInfo.on('open-close', (e, value) => {
+    if(value){
+      btnInfo.addClass('open');
+    }
+    else{
+      btnInfo.removeClass('open');
+    }
+  });
 
   setLinkElementData($('[data-name=title]'), manifestJsonld);
 
@@ -206,10 +228,19 @@ export const initialiseAttribution = (manifestJsonld, mediaMode) => {
       return;
     }
     attribution.removeClass('showing');
+    btnInfo.removeClass('open');
   });
 
   btnInfo.on('click', () => {
-    attribution.toggleClass('showing');
+    if(attribution.is(':visible')){
+      attribution.removeClass('showing');
+      btnInfo.removeClass('open');
+    }
+    else{
+      player.hidePlayerMenus(player);
+      attribution.addClass('showing');
+      btnInfo.addClass('open');
+    }
   });
 };
 
