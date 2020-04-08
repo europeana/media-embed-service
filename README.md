@@ -11,10 +11,10 @@ Install deps from project root with `yarn` or `npm i`
 `yarn start:dev` or `npm run start:dev`
 
 Default port has been set to 9001.
-It's possible to use a different port by specifying this first like so: 
+It's possible to use a different port by specifying this first like so:
 
 `EMVE_PORT=2345 yarn start:dev` to start with port 2345. Same for npm just include `EMVE_PORT=2345` at the beginning.
 
 ### Build for production
 
-`yarn build` or `npm run build`
+`npm run build`
