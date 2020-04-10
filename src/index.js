@@ -25,9 +25,15 @@ export { player };
 var duration = -1;
 var playing = false;
 
+var window_location_href = window.location.href;
+
+export const setWindowLocation = (url) => {
+  window_location_href = url;
+}
+
 window.addEventListener('load', () => {
 
-  const urlParams = new URL(window.location.href).searchParams;
+  const urlParams = new URL(window_location_href).searchParams;
 
   if(urlParams.get('manifest')){
 
@@ -60,8 +66,7 @@ window.addEventListener('load', () => {
     console.log('no manifest supplied');
   }
 
-  if (urlParams.get('t') !== undefined) {
-    //options.temporal = urlParams.get('t');
+  if (urlParams.get('t') !== null) {
     //construct start and duration of the temporal fragment
     let parts = urlParams.get('t').split(',');
     if(split.length > 1){
@@ -182,7 +187,6 @@ export const loadVideo = () => {
   initialisePlayer($('.player-wrapper'));
 };
 */
-
 export const initialiseAttribution = (manifestJsonld, mediaMode) => {
   if(!manifestJsonld.requiredStatement && !manifestJsonld.requiredStatement.en[0]){
     console.log('(no attribution found)');
@@ -204,11 +208,15 @@ export const initialiseAttribution = (manifestJsonld, mediaMode) => {
 
   let btnInfoEl = $('<span class="btn btn-info" data-name="Info">' + svgData + '</span>');
   let btnInfo = mediaMode === 'image' ? btnInfoEl.appendTo($('.info')) : btnInfoEl.insertAfter($('.time-display'));
-  let attribution = $(htmlAttribution).addClass('attribution').appendTo($('.info'));
+  let attribution;
 
   if(player){
+    attribution = $(htmlAttribution).addClass('attribution').appendTo($('.canvas-container'));
     // allow other menus to close this menu
     attribution.attr('data-opener', 'Info');
+  }
+  else{
+    attribution = $(htmlAttribution).addClass('attribution').appendTo($('.info'));
   }
 
   btnInfo.on('open-close', (e, value) => {
@@ -237,7 +245,9 @@ export const initialiseAttribution = (manifestJsonld, mediaMode) => {
       btnInfo.removeClass('open');
     }
     else{
-      player.hidePlayerMenus(player);
+      if(player){
+        player.hidePlayerMenus(player);
+      }
       attribution.addClass('showing');
       btnInfo.addClass('open');
     }

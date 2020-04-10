@@ -7,19 +7,20 @@ const $ = require("jquery");
 describe('index functions', () => {
 
   let originalFetch;
+  let fakeUrl = 'http://server/?width=960&height=320&manifest=manifest&xywh=2534,0,2534,3000';
   const attributionJSON = {"requiredStatement": { "en": ["<div class=\"attribution\">text</div>"]}};
-
 
   beforeEach(function() {
     // mock window.fetch (see here: https://www.damirscorner.com/blog/posts/20200110-MockingFetchCallsWithJasmine.html)
     originalFetch = window.fetch;
     window.fetch = fetchPolyfill
     jasmine.Ajax.install();
+    index.setWindowLocation(fakeUrl);
   });
 
   afterEach(function() {
-    jasmine.Ajax.uninstall();
     window.fetch = originalFetch;
+    jasmine.Ajax.uninstall();
   });
 
   describe('XYWH functions', () => {
@@ -75,7 +76,9 @@ describe('index functions', () => {
     });
 
     it('should format the dimension data', () => {
+      expect(index.dimensionData).toBeTruthy();
       const d = index.dimensionData(1, 2, 3, 4);
+      expect(d).toBeTruthy();
       expect(d.size).toEqual(1);
       expect(d.position.x).toEqual(2);
       expect(d.position.y).toEqual(3);
@@ -148,17 +151,20 @@ describe('index functions', () => {
     });
 
     it('should handle media fragment urls', () => {
-      const params = {
+      let params = [0, 0, imgW, imgH].join(',');
+      const paramsOb = {
         manifestUrl: '',
-        xywh: [0, 0, imgW, imgH].join(',')
-      }
-      expect(index.handleMediaFragment('', imgW, imgH, params)).toBeTruthy();
-      params.xywh = [imgW, imgH, imgW, imgH].join(',')
-      expect(index.handleMediaFragment('', imgW, imgH, params)).toBeFalsy();
-      params.xywh = 'percent:' + [0, 0, 100, 100].join(',')
-      expect(index.handleMediaFragment('', imgW, imgH, params)).toBeTruthy();
-      params.xywh = 'percent:' + [100, 100, 100, 100].join(',')
-      expect(index.handleMediaFragment('', imgW, imgH, params)).toBeFalsy();
+        get: () => {
+          return params
+        }
+      };
+      expect(index.handleMediaFragment('', imgW, imgH, paramsOb)).toBeTruthy();
+      params = [imgW, imgH, imgW, imgH].join(',');
+      expect(index.handleMediaFragment('', imgW, imgH, paramsOb)).toBeFalsy();
+      params = 'percent:' + [0, 0, 100, 100].join(',')
+      expect(index.handleMediaFragment('', imgW, imgH, paramsOb)).toBeTruthy();
+      params = 'percent:' + [100, 100, 100, 100].join(',')
+      expect(index.handleMediaFragment('', imgW, imgH, paramsOb)).toBeFalsy();
     });
 
   });
@@ -182,7 +188,6 @@ describe('index functions', () => {
     setTimeout(function(){
       expect(spy.cb).toHaveBeenCalledTimes(1);
       done();
-
       //index.fnOnLoad();
       //setTimeout(function(){
       //  expect(spy.cb).toHaveBeenCalledTimes(2);
@@ -204,6 +209,7 @@ describe('index functions', () => {
     expect($('.info .btn-info').length).toBeTruthy();
   });
 
+  // THIS WILL WORK WHEN THE PLAYER IS UPGRADED
   it('should show and hide the attribution', () => {
     index.initialiseAttribution(attributionJSON, 'image');
 
@@ -245,5 +251,4 @@ describe('index functions', () => {
     index.setEmbedDimensions(1, 2);
     expect($('.europeana-media-embed').attr('style')).toBeTruthy();
   });
-
 });
