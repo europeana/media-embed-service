@@ -22,7 +22,6 @@ body{
   padding: $def-padding;
   pointer-events: all;
   position: absolute;
-  transform: translateX(0);
   z-index: 1;
 
   .field{
@@ -97,7 +96,11 @@ body{
   }
 }
 
-.attribution,
+.showing{
+  transform: translateX(0);
+}
+
+.showing,
 .options-container,
 .title-link{
   transition: transform 0.4s ease 0s;
@@ -165,7 +168,7 @@ body{
     }
 
     &.playing{
-      .attribution{
+      .showing{
         transform: translateX(calc(100% + 20px));
       }
       .options-container{
@@ -175,7 +178,9 @@ body{
         transform: translateY(calc(-100% - 20px));
       }
       &:hover{
-        .attribution,
+        .showing{
+          transform: translateX(0);
+        }
         .options-container,
         .title-link{
           transform: translateY(0);

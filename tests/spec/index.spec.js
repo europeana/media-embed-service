@@ -1,5 +1,6 @@
 import { fetch as fetchPolyfill } from 'whatwg-fetch';
-import * as index  from '../src/index';
+import * as index  from '../../src/index';
+
 require('jasmine-ajax');
 
 const $ = require("jquery");
@@ -7,7 +8,6 @@ const $ = require("jquery");
 describe('index functions', () => {
 
   let originalFetch;
-  let fakeUrl = 'http://server/?width=960&height=320&manifest=manifest&xywh=2534,0,2534,3000';
   const attributionJSON = {"requiredStatement": { "en": ["<div class=\"attribution\">text</div>"]}};
 
   beforeEach(function() {
@@ -15,12 +15,109 @@ describe('index functions', () => {
     originalFetch = window.fetch;
     window.fetch = fetchPolyfill
     jasmine.Ajax.install();
-    index.setWindowLocation(fakeUrl);
   });
 
   afterEach(function() {
+    $('.fixture-element').remove();
     window.fetch = originalFetch;
     jasmine.Ajax.uninstall();
+  });
+
+  describe('On load event', () => {
+    const fixturePath = 'manifest.json'
+    const paramWidth = 960;
+    const paramHeight = 320;
+    const fakeUrl = 'http://fake-server/?manifest=' + fixturePath;
+    const fakeUrlWH = fakeUrl + `&width=${paramWidth}&height=${paramHeight}`;
+    const fakeUrlXywh = fakeUrl + '&xywh=2534,0,2534,3000';
+    const fakeUrlXywhInvalid = fakeUrl + '&xywh=0,0,0,0';
+    const getFakeJsonResponse = (type) => {
+      return {
+        "items": [
+          {
+            "items": [
+              {
+                "items": [
+                  {
+                    "body": {
+                      "type": type
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      };
+    };
+
+    const mockJsonRequest = (url, mediaType) => {
+      index.setWindowLocation(url);
+      jasmine.Ajax.stubRequest(fixturePath).andReturn({
+        responseJSON: getFakeJsonResponse(mediaType),
+        contentType: 'application/json',
+        status: 200
+      });
+    };
+
+    it('should set the embed dimensions when the url parameters "width" and "height" are set', (done) => {
+      const elClass = 'europeana-media-embed';
+      $('body').append(`<div class="${elClass} fixture-element"><div class="player-wrapper"></div></div>`);
+      mockJsonRequest(fakeUrlWH, 'video');
+
+      expect($('.' + elClass).css('max-width')).toEqual('none');
+      expect($('.' + elClass).css('max-height')).toEqual('none');
+
+      window.dispatchEvent(new Event('load'))
+
+      setTimeout(() => {
+        expect($('.' + elClass).css('max-width')).toEqual(paramWidth + 'px');
+        expect($('.' + elClass).css('max-height')).toEqual(paramHeight + 'px');
+        done();
+      }, 1);
+    });
+
+    it('should show a crop section when the "xywh" url parameter is set', (done) => {
+      const elClass = 'xywh-img-wrapper';
+
+      $('body').append(`<div class="player-wrapper"></div>`);
+      mockJsonRequest(fakeUrlXywh, 'image');
+
+      expect($('.' + elClass).length).toBeFalsy();
+      window.dispatchEvent(new Event('load'))
+
+      setTimeout(() => {
+        expect($('.' + elClass).length).toBeTruthy();
+        done();
+      }, 1);
+    });
+
+    it('should display an image element when an invalid "xywh" url parameter is set', (done) => {
+      $('body').append(`<div class="player-wrapper"></div>`);
+      mockJsonRequest(fakeUrlXywhInvalid, 'image');
+
+      expect($('img').length).toBeFalsy();
+      window.dispatchEvent(new Event('load'))
+
+      setTimeout(() => {
+        expect($('img').length).toBeTruthy();
+        done();
+      }, 1);
+    });
+
+    it('should set player class according to media type', (done) => {
+      $('body').append('<div class="player-wrapper fixture-element"></div>')
+      mockJsonRequest(fakeUrl, 'audio');
+
+      expect($('.player-wrapper').hasClass('audio')).toBeFalsy();
+      window.dispatchEvent(new Event('load'))
+
+      setTimeout(()=> {
+        expect($('.player-wrapper').hasClass('audio')).toBeTruthy();
+        done();
+      }, 1);
+    });
+
   });
 
   describe('XYWH functions', () => {
@@ -166,10 +263,39 @@ describe('index functions', () => {
       params = 'percent:' + [100, 100, 100, 100].join(',')
       expect(index.handleMediaFragment('', imgW, imgH, paramsOb)).toBeFalsy();
     });
-
   });
 
-  it('should load JSON (on load)', (done) => {
+  describe('Attribution', () => {
+
+    beforeEach(function() {
+      const fixture = '<div class="info canvas-container fixture-element"></div>';
+      document.body.insertAdjacentHTML('afterbegin', fixture);
+    });
+
+    it('should initialise the attribution', () => {
+
+      expect($('.attribution').length).toBeFalsy();
+      expect($('.btn-info').length).toBeFalsy();
+
+      index.initialiseAttribution(attributionJSON, 'image');
+
+      expect($('.attribution').length).toBeTruthy();
+      expect($('.btn-info').length).toBeTruthy();
+    });
+
+    it('should show and hide the attribution', () => {
+
+      index.initialiseAttribution(attributionJSON, 'image');
+
+      expect($('.attribution').hasClass('showing')).toBeFalsy();
+      $('.btn-info').click();
+      expect($('.attribution').hasClass('showing')).toBeTruthy();
+      $('.attribution').click();
+      expect($('.attribution').hasClass('showing')).toBeFalsy();
+    });
+  });
+
+  it('should load JSON', (done) => {
 
     const doneFn = jasmine.createSpy('success');
     const url = 'http://123.com';
@@ -186,38 +312,9 @@ describe('index functions', () => {
     index.loadJSON(url, spy.cb);
 
     setTimeout(function(){
-      expect(spy.cb).toHaveBeenCalledTimes(1);
+      expect(spy.cb).toHaveBeenCalled();
       done();
-      //index.fnOnLoad();
-      //setTimeout(function(){
-      //  expect(spy.cb).toHaveBeenCalledTimes(2);
-      //  done();
-      //}, 1);
     }, 1);
-  });
-
-  it('should initialise the attribution', () => {
-    const fixture = '<div class="info"></div>';
-    document.body.insertAdjacentHTML('afterbegin', fixture);
-
-    expect($('.info .attribution').length).toBeFalsy();
-    expect($('.info .btn-info').length).toBeFalsy();
-
-    index.initialiseAttribution(attributionJSON, 'image');
-
-    expect($('.info .attribution').length).toBeTruthy();
-    expect($('.info .btn-info').length).toBeTruthy();
-  });
-
-  // THIS WILL WORK WHEN THE PLAYER IS UPGRADED
-  it('should show and hide the attribution', () => {
-    index.initialiseAttribution(attributionJSON, 'image');
-
-    expect($('.info .attribution').hasClass('showing')).toBeFalsy();
-    $('.info .btn-info').click();
-    expect($('.info .attribution').hasClass('showing')).toBeTruthy();
-    $('.info .attribution').click();
-    expect($('.info .attribution').hasClass('showing')).toBeFalsy();
   });
 
   it('should set link element data', () => {
