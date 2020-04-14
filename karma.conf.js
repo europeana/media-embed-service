@@ -1,7 +1,7 @@
-const includeCoverage = true;
-
+const includeCoverage = process.argv[3];
+console.log(`Karma will${includeCoverage ? ' ' : ' NOT '}generate coverage`)
 const rules = () => {
-  const defaultRules = [
+  return [
     {
       test: /\.js$/i,
       exclude: /(node_modules)/,
@@ -11,24 +11,24 @@ const rules = () => {
       test: /\.[s]?css$/,
       exclude: /(node_modules)/,
       loader: 'style-loader!css-loader!sass-loader'
-    }
-  ];
-  return includeCoverage ? defaultRules.concat([
-    {
-      enforce: 'pre',
-      test: /.spec\.js$/,
-      include: /spec/,
-      exclude: /node_modules/,
-      use: [{ loader: 'babel-loader' }]
     },
-    {
-      enforce: 'pre',
-      test: /\.js$/,
-      include: /src/,
-      exclude: /node_modules/,
-      use: [{ loader: 'istanbul-instrumenter-loader', query: { esModules: true } }]
-    }
-  ]) : defaultRules;
+    ... includeCoverage ? [
+      {
+        enforce: 'pre',
+        test: /.spec\.js$/,
+        include: /tests\/spec/,
+        exclude: /node_modules/,
+        use: [{ loader: 'babel-loader' }]
+	      },
+	      {
+        enforce: 'pre',
+        test: /\.js$/,
+        include: /src/,
+        exclude: /(node_modules|tests)/,
+        use: [{ loader: 'istanbul-instrumenter-loader', query: { esModules: true } }]
+      }
+    ] : []
+  ];
 };
 
 module.exports = function (config) {
@@ -36,26 +36,17 @@ module.exports = function (config) {
     basePath: '',
     exclude: [],
     files: [
-      { pattern: 'spec/*.js', watched: true, served: true, included: true },
+      { pattern: 'tests/spec/*.js', watched: true, served: true, included: true },
       'https://code.jquery.com/jquery-3.4.1.min.js'
     ],
-    //.concat(
-    //  ['jpg', 'js', 'json', 'mp3', 'mp4'].map((ext) => {
-    //    return {
-    //      pattern:  `./spec/fixture-data/*.${ext}`,
-    //      included: false,
-    //      watched:  true,
-    //      served:   true
-    //    }
-    //  })
-    //),
     autoWatch: true,
-    singleRun: false,
+    singleRun: true,
     failOnEmptyTestSuite: false,
     logLevel: config.LOG_WARN,
     frameworks: ['jasmine'],
     browsers: ['Chrome'/*,'PhantomJS','Firefox','Edge','ChromeCanary','Opera','IE','Safari'*/],
-    reporters: includeCoverage ? ['progress', 'kjhtml', 'spec', 'coverage'] : ['kjhtml'],//, 'kjhtml', 'dots', ],
+    reporters: ['progress', 'kjhtml', 'spec', ... includeCoverage ? ['coverage'] : []],
+
     //address that the server will listen on, '0.0.0.0' is default
     listenAddress: '0.0.0.0',
     //hostname to be used when capturing browsers, 'localhost' is default
@@ -89,11 +80,10 @@ module.exports = function (config) {
         rules: rules()
       }
     },
-    preprocessors: includeCoverage ? {
-      './spec/**/*.js': ['webpack', 'sourcemap'],
-      './src/**/*.js': ['webpack', 'sourcemap', 'coverage'],
-    } : {
-      './spec/*.js': ['webpack']
+    preprocessors : {
+      './tests/spec/*.js': ['webpack', 'sourcemap'],
+      ... includeCoverage ? [{'./src/**/*.js': ['webpack', 'sourcemap', 'coverage']}
+      ] :[]
     },
     webpackMiddleware: {
       //turn off webpack bash output when run the tests

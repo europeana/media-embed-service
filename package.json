@@ -1,14 +1,15 @@
 {
-  "name": "video-editor-embed",
+  "name": "media-embed-service",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "build": "webpack-cli",
     "start:dev": "NODE_ENV=development webpack-dev-server",
-    "test": "karma start"
+    "test": "karma start",
+    "test:coverage": "npm run test -- --coverage"
   },
   "dependencies": {
-    "europeanamediaplayer": "^0.5.23",
+    "europeanamediaplayer": "^0.5.25",
     "materialize-css": "^1.0.0",
     "placeload.js": "^1.0.4",
     "whatwg-fetch": "^3.0.0"
