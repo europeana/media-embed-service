@@ -1,19 +1,36 @@
-# Europeana Media Video Embed
+# Media Embed Service
 
-Created as part of the Europeana Media project
+[![Build Status](https://travis-ci.com/europeana/media-embed-service.svg?branch=master)](https://travis-ci.com/europeana/media-embed-service)
 
-### First
+Created as part of the [Europeana Media Project](https://pro.europeana.eu/project/europeana-media)
 
-Install deps from project root with `yarn` or `npm i`
+### Build Setup
 
-### Start development server with:
+Install package dependencies:
+* `npm install`
 
-`yarn start:dev` or `npm run start:dev`
+### Linting
+To lint-check the `.js` run:
+* `npm run lint`
+* `npm run lint:fix`
 
-Default port has been set to 9001.
-It's possible to use a different port by specifying this first like so:
+To lint-check the `.scss` run:
 
-`EMVE_PORT=2345 yarn start:dev` to start with port 2345. Same for npm just include `EMVE_PORT=2345` at the beginning.
+* `npm run lint:style`
+* `npm run lint:style:fix`
+
+### Testing
+
+Run unit tests with either of:
+* `npm run test`
+* `npm test`
+
+### Development Server
+
+Run:
+* `npm run start:dev`
+
+to starts a dev server on port 9001.
 
 ### Build for production
 
