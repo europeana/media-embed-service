@@ -266,8 +266,8 @@ export const initialiseEmbed = (mediaMode) => {
   let manifestJsonld = player.manifest.__jsonld;
 
   initialiseAttribution(manifestJsonld, mediaMode);
-
   setLinkElementData($('.title-link'), manifestJsonld);
+  $('.logo-link').removeAttr('style');
 
   if (duration === -1 && manifestJsonld.items[0].duration) {
     duration = manifestJsonld.items[0].duration;
