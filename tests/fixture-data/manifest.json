@@ -114,7 +114,7 @@
         "motivation" : "painting",
         "timeMode" : "trim",
         "body" : {
-          "id" : "http://localhost:9876/base/tests/fixture-data/manifest.mp4",
+          "id" : "http://127.0.0.1:8081/tests/fixture-data/manifest.mp4",
           "type" : "Video",
           "format" : "video/mp4"
         },
