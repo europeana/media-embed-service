@@ -17,6 +17,7 @@ const fmtWHParam = (w, h) => {
 
 const confirmSizeFromParams = (browser, w, h) => {
   return browser.url(target_url + fmtWHParam(w, h))
+  .waitForElementVisible(selCanvas, waitTime)
   .getElementSize(selCanvas, function (result) {
     this.assert.ok(result.value.width === w, `Check width (${result.value.width}) is ${w}`);
     this.assert.ok(result.value.height === h, `Check height (${result.value.height}) is ${h}`);
