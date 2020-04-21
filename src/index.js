@@ -19,6 +19,7 @@ const EuropeanaMediaPlayer = require('europeanamediaplayer').default;
 let duration = -1;
 let manifest;
 let player;
+let timeoutMouseMove;
 export { player };
 
 let windowLocationHref = window.location.href;
@@ -186,12 +187,24 @@ export const initialiseAttribution = (manifestJsonld, mediaMode) => {
     return;
   }
 
-  let pw = $('.player-wrapper');
+  const pw = $('.player-wrapper');
+
   pw.on('mousemove', () => {
     pw.addClass('moving');
-    setTimeout(() => {
+    if (timeoutMouseMove) {
+      window.clearTimeout(timeoutMouseMove);
+    }
+    timeoutMouseMove = setTimeout(() => {
       pw.removeClass('moving');
     }, 3000);
+  });
+
+  $('.options-container').on('mouseenter', () => {
+    pw.addClass('force-controls');
+  });
+
+  $('.options-container').on('mouseleave', () => {
+    pw.removeClass('force-controls');
   });
 
   let svgData = '<svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"/><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>';
