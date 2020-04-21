@@ -251,7 +251,7 @@ body {
   }
 }
 
-.playing:hover {
+.playing.moving {
   .showing {
     transform: translateX(0);
   }
