@@ -251,6 +251,7 @@ body {
   }
 }
 
+.playing.force-controls,
 .playing.moving {
   .showing {
     transform: translateX(0);
