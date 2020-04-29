@@ -51,7 +51,7 @@ window.addEventListener('load', () => {
         const imgUrl = rootItem.items[0].items[0].body.id;
         const xywhParam = urlParams.get('xywh');
         if (!(xywhParam && handleMediaFragment(imgUrl, rootItem.width, rootItem.height, urlParams))) {
-          $('.player-wrapper').append(`<img src="${manifestData.items[0].items[0].items[0].body.id}">`);
+          $('.player-wrapper').append(`<img src="${manifestData.items[0].items[0].items[0].body.id}" alt="">`);
         }
         $('.player-wrapper').removeClass('loading');
         initialiseAttribution(manifestData.items[0], mediaMode);
@@ -173,14 +173,6 @@ export const setEmbedDimensions = (w, h, noRatio) => {
   }
 };
 
-/*
-export const loadVideo = () => {
-  if (options.temporal) {
-    manifest = `${embedHost}${options.embedid}/t/${options.temporal}`;
-  }
-  initialisePlayer($('.player-wrapper'));
-};
-*/
 export const initialiseAttribution = (manifestJsonld, mediaMode) => {
   if (!manifestJsonld.requiredStatement && !manifestJsonld.requiredStatement.en[0]) {
     console.log('(no attribution found)');
@@ -210,7 +202,7 @@ export const initialiseAttribution = (manifestJsonld, mediaMode) => {
   let svgData = '<svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"/><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>';
   let htmlAttribution = manifestJsonld.requiredStatement.en[0];
 
-  // TMP CODE TO REMOVE
+  // TMP CODE TO REMOVE WHEN API RESPONSE SUPPLIES THIS
   if ($(htmlAttribution).length && $(htmlAttribution).length === 2) {
     let styling = '<style type="text/css">@import url(\'/icons/style.css\');</style>';
     let markup = $(htmlAttribution)[1];
@@ -220,7 +212,7 @@ export const initialiseAttribution = (manifestJsonld, mediaMode) => {
   }
   // END TMP CODE TO REMOVE
 
-  let btnInfoEl = $('<span class="btn btn-info" data-name="Info">' + svgData + '</span>');
+  let btnInfoEl = $('<a class="btn btn-info" data-name="Info">' + svgData + '</a>');
   let btnInfo = mediaMode === 'image' ? btnInfoEl.appendTo($('.info')) : btnInfoEl.insertAfter($('.time-display'));
   let attribution;
 
@@ -273,16 +265,17 @@ export const setLinkElementData = ($el, manifest) => {
   if (manifest.seeAlso && manifest.seeAlso.length > 0 && manifest.seeAlso[0].id) {
     let url = manifest.seeAlso[0].id;
     url = url.replace('api/v2', 'portal').replace('json-ld', 'html');
-    $el.attr('href', url);
-    $el.attr('target', '_blank');
-    $el.attr('rel', 'noopener');
+    $el.attr({
+      href: url,
+      target: '_blank',
+      rel: 'noopener'
+    });
   }
 };
 
 export const initialiseEmbed = (mediaMode) => {
 
   $('.player-wrapper').removeClass('loading');
-  // getSubtitles();
 
   let manifestJsonld = player.manifest.__jsonld;
 
@@ -294,41 +287,6 @@ export const initialiseEmbed = (mediaMode) => {
     duration = manifestJsonld.items[0].duration;
   }
 };
-
-/*
-function getSubtitles() {
-  let subtitles = {};
-  let link = `${embedHost}${options.embedid}/subtitles`
-  if (options.temporal) {
-    link += `/t/${options.temporal}`;
-  }
-
-  loadJSON(link, (response) => {
-      let   subs = response;
-      subs.forEach(function(subtitle) {
-        let language = subtitle.language;
-        //check if track already exists
-        if (!subtitles.hasOwnProperty(language)) {
-          subtitles[language] = [];
-        }
-        subtitles[language].push(subtitle);
-      });
-
-      for (var language of Object.keys(subtitles)) {
-        let track = $("#embed-player video")[0].addTextTrack("subtitles", "user_subitles", language);
-
-        subtitles[language].forEach(function(subtitle) {
-          var cue = new VTTCue(subtitle.start/1000, subtitle.end/1000, subtitle.text);
-          cue.id = subtitle.id;
-          cue.line = -4;
-          cue.size = 90;
-          track.addCue(cue);
-        });
-      }
-      player.initLanguages();
-  });
-}
-*/
 
 export const initialisePlayer = (playerWrapper, mediaUrl, mediaMode) => {
   let p = new EuropeanaMediaPlayer(playerWrapper, { manifest: mediaUrl }, { mode: 'player', manifest: mediaUrl });
