@@ -14,10 +14,6 @@ body {
 
 /* Logo / link */
 
-.image .title-logo {
-  display: none;
-}
-
 .logo-link {
   pointer-events: all;
 
@@ -74,10 +70,6 @@ body {
   pointer-events: all;
   position: absolute;
   z-index: 1;
-
-  &.showing {
-    display: block;
-  }
 
   a {
     color: #000;
@@ -173,17 +165,7 @@ body {
   .attribution:hover {
     display: block;
   }
-}
 
-.player-wrapper.audio,
-.player-wrapper.video {
-  .attribution {
-    bottom: 56px;
-    right: $def-padding;
-  }
-}
-
-.image {
   .attribution {
     bottom: 8px;
     right: 8px;
@@ -191,6 +173,7 @@ body {
 }
 
 .showing {
+  display: block;
   transform: translateX(0);
 }
 
@@ -205,7 +188,6 @@ body {
   overflow: hidden;
   position: relative;
 }
-
 
 .player-wrapper .loading::after {
   animation-duration: 2s;
@@ -231,6 +213,11 @@ body {
 .video {
   // force the aspect ratio
   padding-top: 75%;
+
+  .attribution {
+    bottom: 56px;
+    right: $def-padding;
+  }
 
   .options-container {
     transform: translateY(0);
@@ -276,14 +263,6 @@ body {
 .eups-player {
   position: absolute;
   top: 0;
-}
-
-.simple-image {
-  border: 0;
-  display: block;
-  margin: 0;
-  padding: 0;
-  width: 100%;
 }
 
 .info {

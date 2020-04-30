@@ -5,6 +5,20 @@ require('jasmine-ajax');
 
 const $ = require("jquery");
 
+// utility for reliably clicking on link elements (<a>)
+const fnClick = (el) => {
+  var ev = document.createEvent('MouseEvent');
+  ev.initMouseEvent(
+    'click',
+    true /* bubble */, true /* cancelable */,
+    window, null,
+    0, 0, 0, 0, /* coordinates */
+    false, false, false, false, /* modifier keys */
+    0 /*left*/, null
+  );
+  el.dispatchEvent(ev);
+};
+
 describe('index functions', () => {
 
   let originalFetch;
@@ -286,9 +300,8 @@ describe('index functions', () => {
     it('should show and hide the attribution', () => {
 
       index.initialiseAttribution(attributionJSON, 'image');
-
       expect($('.attribution').hasClass('showing')).toBeFalsy();
-      $('.btn-info').click();
+      fnClick($('.btn-info')[0]);
       expect($('.attribution').hasClass('showing')).toBeTruthy();
       $('.attribution').click();
       expect($('.attribution').hasClass('showing')).toBeFalsy();
