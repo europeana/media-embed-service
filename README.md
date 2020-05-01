@@ -25,6 +25,12 @@ Run unit tests with either of:
 * `npm run test`
 * `npm test`
 
+Generate a coverage report with:
+* `npm run test:coverage`
+
+Run an accessibility test with:
+* `npm run test:accessibility`
+
 ### Development Server
 
 Run:
