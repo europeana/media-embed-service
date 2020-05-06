@@ -10,6 +10,7 @@
     "lint:style:fix": "npm run lint:style -- --fix",
     "start:dev": "NODE_ENV=development webpack-dev-server",
     "test": "karma start",
+    "test:accessibility": "npm run test -- --accessibility",
     "test:coverage": "npm run test -- --coverage",
     "test:e2e": "npm run test:e2e:chrome",
     "test:e2e:chrome": "node nightwatch-runner.js --env=chrome",
@@ -27,6 +28,7 @@
     "whatwg-fetch": "^3.0.0"
   },
   "devDependencies": {
+    "axe-core": "^3.5.3",
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.0",
