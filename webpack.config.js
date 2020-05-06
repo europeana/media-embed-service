@@ -1,3 +1,4 @@
+require('dotenv').config();
 const path = require('path')
 var webpack = require('webpack')
 
@@ -50,6 +51,10 @@ const config = function (mode) {
         publicPath: '/',
     },
     plugins: [
+      new webpack.DefinePlugin({
+        API_KEY: JSON.stringify(process.env.API_KEY),
+        API_SERVER: JSON.stringify(process.env.API_SERVER)
+      }),
       new webpack.ProvidePlugin({
         $: "jquery"
       })

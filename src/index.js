@@ -1,5 +1,4 @@
 import './index.scss';
-
 const EuropeanaMediaPlayer = require('europeanamediaplayer').default;
 
 //localhost:9001?manifest=https%3A%2F%2Fiiif.europeana.eu%2F%2Fpresentation%2F%2F08609%2F%2Ffe9c5449_9522_4a70_951b_ef0b27893ae9%2F%2Fmanifest%3Fformat%3D3%26wskey%3Dapi2demo
@@ -17,7 +16,6 @@ const EuropeanaMediaPlayer = require('europeanamediaplayer').default;
 //http://localhost:9001/?width=260&height=520&manifest=https%3A%2F%2Fiiif.europeana.eu%2Fpresentation%2F22%2F_72315%2Fmanifest%3Fformat%3D3%26wskey%3Dapi2demo
 
 let duration = -1;
-let manifest;
 let player;
 let playerWrapper;
 let timeoutMouseMove;
@@ -34,34 +32,19 @@ window.addEventListener('load', () => {
   playerWrapper = $('.player-wrapper');
 
   const urlParams = new URL(windowLocationHref).searchParams;
+  const manifest = urlParams.get('manifest');
 
-  if (urlParams.get('manifest')) {
-
-    loadJSON(urlParams.get('manifest'), (manifestData) => {
-
-      let mediaMode = manifestData.items[0].items[0].items[0].body.type.toLowerCase();
-      playerWrapper.addClass(mediaMode);
-
-      manifest = urlParams.get('manifest');
-
-      if (urlParams.get('width') && urlParams.get('height')) {
-        setEmbedDimensions(urlParams.get('width'), urlParams.get('height'), mediaMode === 'image');
-      }
-      if (['audio', 'video'].indexOf(mediaMode) > -1) {
-        initialisePlayer(manifest, mediaMode);
-      } else if (mediaMode === 'image') {
-        const rootItem = manifestData.items[0];
-        const imgUrl = rootItem.items[0].items[0].body.id;
-        const xywhParam = urlParams.get('xywh');
-        if (!(xywhParam && handleMediaFragment(imgUrl, rootItem.width, rootItem.height, urlParams))) {
-          playerWrapper.append(`<img src="${manifestData.items[0].items[0].items[0].body.id}" alt="">`);
-        }
-        playerWrapper.removeClass('loading');
-        initialiseAttribution(manifestData.items[0], mediaMode);
-      }
-    });
+  if (manifest) {
+    loadUrl(manifest, urlParams);
+  } else if (urlParams.get('id')) {
+    const id = urlParams.get('id');
+    if (id.match(/\/[a-z_0-9]+\/[a-z_0-9]+$/)) {
+      loadUrl(`${API_SERVER}/${id}/manifest?format=3&wskey=${API_KEY}`, urlParams);
+    } else {
+      console.log('id invalid');
+    }
   } else {
-    console.log('no manifest supplied');
+    console.log('no manifest or id supplied');
   }
 
   if (urlParams.get('t') !== null) {
@@ -73,6 +56,29 @@ window.addEventListener('load', () => {
     }
   }
 });
+
+export const loadUrl = (manifest, urlParams) => {
+
+  loadJSON(manifest, (manifestData) => {
+    let mediaMode = manifestData.items[0].items[0].items[0].body.type.toLowerCase();
+    playerWrapper.addClass(mediaMode);
+    if (urlParams.get('width') && urlParams.get('height')) {
+      setEmbedDimensions(urlParams.get('width'), urlParams.get('height'), mediaMode === 'image');
+    }
+    if (['audio', 'video'].indexOf(mediaMode) > -1) {
+      initialisePlayer(manifest, mediaMode);
+    } else if (mediaMode === 'image') {
+      const rootItem = manifestData.items[0];
+      const imgUrl = rootItem.items[0].items[0].body.id;
+      const xywhParam = urlParams.get('xywh');
+      if (!(xywhParam && handleMediaFragment(imgUrl, rootItem.width, rootItem.height, urlParams))) {
+        playerWrapper.append(`<img src="${manifestData.items[0].items[0].items[0].body.id}" alt="">`);
+      }
+      playerWrapper.removeClass('loading');
+      initialiseAttribution(manifestData.items[0], mediaMode);
+    }
+  });
+};
 
 export const handleMediaFragment = (imgUrl, imgW, imgH, urlParams) => {
 
