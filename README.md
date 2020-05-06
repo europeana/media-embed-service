@@ -9,6 +9,12 @@ Created as part of the [Europeana Media Project](https://pro.europeana.eu/projec
 Install package dependencies:
 * `npm install`
 
+Create a `.env` file:
+* `copy .env.example`
+* `supply values for:`
+  * API_KEY
+  * API_SERVER
+
 ### Linting
 To lint-check the `.js` run:
 * `npm run lint`
