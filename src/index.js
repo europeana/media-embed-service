@@ -1,5 +1,4 @@
 import './index.scss';
-
 const EuropeanaMediaPlayer = require('europeanamediaplayer').default;
 
 //localhost:9001?manifest=https%3A%2F%2Fiiif.europeana.eu%2F%2Fpresentation%2F%2F08609%2F%2Ffe9c5449_9522_4a70_951b_ef0b27893ae9%2F%2Fmanifest%3Fformat%3D3%26wskey%3Dapi2demo
@@ -17,8 +16,8 @@ const EuropeanaMediaPlayer = require('europeanamediaplayer').default;
 //http://localhost:9001/?width=260&height=520&manifest=https%3A%2F%2Fiiif.europeana.eu%2Fpresentation%2F22%2F_72315%2Fmanifest%3Fformat%3D3%26wskey%3Dapi2demo
 
 let duration = -1;
-let manifest;
 let player;
+let playerWrapper;
 let timeoutMouseMove;
 export { player };
 
@@ -30,35 +29,22 @@ export const setWindowLocation = (url) => {
 
 window.addEventListener('load', () => {
 
+  playerWrapper = $('.player-wrapper');
+
   const urlParams = new URL(windowLocationHref).searchParams;
+  const manifest = urlParams.get('manifest');
 
-  if (urlParams.get('manifest')) {
-
-    loadJSON(urlParams.get('manifest'), (manifestData) => {
-
-      let mediaMode = manifestData.items[0].items[0].items[0].body.type.toLowerCase();
-      $('.player-wrapper').addClass(mediaMode);
-
-      manifest = urlParams.get('manifest');
-
-      if (urlParams.get('width') && urlParams.get('height')) {
-        setEmbedDimensions(urlParams.get('width'), urlParams.get('height'), mediaMode === 'image');
-      }
-      if (['audio', 'video'].indexOf(mediaMode) > -1) {
-        initialisePlayer($('.player-wrapper'), manifest, mediaMode);
-      } else if (mediaMode === 'image') {
-        const rootItem = manifestData.items[0];
-        const imgUrl = rootItem.items[0].items[0].body.id;
-        const xywhParam = urlParams.get('xywh');
-        if (!(xywhParam && handleMediaFragment(imgUrl, rootItem.width, rootItem.height, urlParams))) {
-          $('.player-wrapper').append(`<img src="${manifestData.items[0].items[0].items[0].body.id}">`);
-        }
-        $('.player-wrapper').removeClass('loading');
-        initialiseAttribution(manifestData.items[0], mediaMode);
-      }
-    });
+  if (manifest) {
+    loadUrl(manifest, urlParams);
+  } else if (urlParams.get('id')) {
+    const id = urlParams.get('id');
+    if (id.match(/\/[a-z_0-9]+\/[a-z_0-9]+$/)) {
+      loadUrl(`${API_SERVER}/${id}/manifest?format=3&wskey=${API_KEY}`, urlParams);
+    } else {
+      console.log('id invalid');
+    }
   } else {
-    console.log('no manifest supplied');
+    console.log('no manifest or id supplied');
   }
 
   if (urlParams.get('t') !== null) {
@@ -70,6 +56,29 @@ window.addEventListener('load', () => {
     }
   }
 });
+
+export const loadUrl = (manifest, urlParams) => {
+
+  loadJSON(manifest, (manifestData) => {
+    let mediaMode = manifestData.items[0].items[0].items[0].body.type.toLowerCase();
+    playerWrapper.addClass(mediaMode);
+    if (urlParams.get('width') && urlParams.get('height')) {
+      setEmbedDimensions(urlParams.get('width'), urlParams.get('height'), mediaMode === 'image');
+    }
+    if (['audio', 'video'].indexOf(mediaMode) > -1) {
+      initialisePlayer(manifest, mediaMode);
+    } else if (mediaMode === 'image') {
+      const rootItem = manifestData.items[0];
+      const imgUrl = rootItem.items[0].items[0].body.id;
+      const xywhParam = urlParams.get('xywh');
+      if (!(xywhParam && handleMediaFragment(imgUrl, rootItem.width, rootItem.height, urlParams))) {
+        playerWrapper.append(`<img src="${manifestData.items[0].items[0].items[0].body.id}" alt="">`);
+      }
+      playerWrapper.removeClass('loading');
+      initialiseAttribution(manifestData.items[0], mediaMode);
+    }
+  });
+};
 
 export const handleMediaFragment = (imgUrl, imgW, imgH, urlParams) => {
 
@@ -90,7 +99,7 @@ export const handleMediaFragment = (imgUrl, imgW, imgH, urlParams) => {
     dimensions = getFragmentPixel(imgW, imgH, ...xywh);
   }
 
-  $('.player-wrapper').append('<div class="xywh-img-wrapper"><div class="xywh-img"'
+  playerWrapper.append('<div class="xywh-img-wrapper"><div class="xywh-img"'
    + ' style="'
    + 'background-image: url(' + imgUrl + '); '
    + 'background-size: ' + dimensions.size  + '%; '
@@ -169,48 +178,38 @@ export const setEmbedDimensions = (w, h, noRatio) => {
   $('.europeana-media-embed').css(dimensionCss);
   if (!noRatio) {
     const pct = (h / w) * 100;
-    $('.player-wrapper').css('padding-top', `${pct}%`);
+    playerWrapper.css('padding-top', `${pct}%`);
   }
 };
 
-/*
-export const loadVideo = () => {
-  if (options.temporal) {
-    manifest = `${embedHost}${options.embedid}/t/${options.temporal}`;
-  }
-  initialisePlayer($('.player-wrapper'));
-};
-*/
 export const initialiseAttribution = (manifestJsonld, mediaMode) => {
   if (!manifestJsonld.requiredStatement && !manifestJsonld.requiredStatement.en[0]) {
     console.log('(no attribution found)');
     return;
   }
 
-  const pw = $('.player-wrapper');
-
-  pw.on('mousemove', () => {
-    pw.addClass('moving');
+  playerWrapper.on('mousemove', () => {
+    playerWrapper.addClass('moving');
     if (timeoutMouseMove) {
       window.clearTimeout(timeoutMouseMove);
     }
     timeoutMouseMove = setTimeout(() => {
-      pw.removeClass('moving');
+      playerWrapper.removeClass('moving');
     }, 3000);
   });
 
   $('.options-container').on('mouseenter', () => {
-    pw.addClass('force-controls');
+    playerWrapper.addClass('force-controls');
   });
 
   $('.options-container').on('mouseleave', () => {
-    pw.removeClass('force-controls');
+    playerWrapper.removeClass('force-controls');
   });
 
   let svgData = '<svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"/><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>';
   let htmlAttribution = manifestJsonld.requiredStatement.en[0];
 
-  // TMP CODE TO REMOVE
+  // TMP CODE TO REMOVE WHEN API RESPONSE SUPPLIES ATTRIBUTION DATA CORRECTLY
   if ($(htmlAttribution).length && $(htmlAttribution).length === 2) {
     let styling = '<style type="text/css">@import url(\'/icons/style.css\');</style>';
     let markup = $(htmlAttribution)[1];
@@ -220,7 +219,7 @@ export const initialiseAttribution = (manifestJsonld, mediaMode) => {
   }
   // END TMP CODE TO REMOVE
 
-  let btnInfoEl = $('<span class="btn btn-info" data-name="Info">' + svgData + '</span>');
+  let btnInfoEl = $('<a class="btn btn-info" data-name="Info">' + svgData + '</a>');
   let btnInfo = mediaMode === 'image' ? btnInfoEl.appendTo($('.info')) : btnInfoEl.insertAfter($('.time-display'));
   let attribution;
 
@@ -273,16 +272,17 @@ export const setLinkElementData = ($el, manifest) => {
   if (manifest.seeAlso && manifest.seeAlso.length > 0 && manifest.seeAlso[0].id) {
     let url = manifest.seeAlso[0].id;
     url = url.replace('api/v2', 'portal').replace('json-ld', 'html');
-    $el.attr('href', url);
-    $el.attr('target', '_blank');
-    $el.attr('rel', 'noopener');
+    $el.attr({
+      href: url,
+      target: '_blank',
+      rel: 'noopener'
+    });
   }
 };
 
 export const initialiseEmbed = (mediaMode) => {
 
-  $('.player-wrapper').removeClass('loading');
-  // getSubtitles();
+  playerWrapper.removeClass('loading');
 
   let manifestJsonld = player.manifest.__jsonld;
 
@@ -295,42 +295,7 @@ export const initialiseEmbed = (mediaMode) => {
   }
 };
 
-/*
-function getSubtitles() {
-  let subtitles = {};
-  let link = `${embedHost}${options.embedid}/subtitles`
-  if (options.temporal) {
-    link += `/t/${options.temporal}`;
-  }
-
-  loadJSON(link, (response) => {
-      let   subs = response;
-      subs.forEach(function(subtitle) {
-        let language = subtitle.language;
-        //check if track already exists
-        if (!subtitles.hasOwnProperty(language)) {
-          subtitles[language] = [];
-        }
-        subtitles[language].push(subtitle);
-      });
-
-      for (var language of Object.keys(subtitles)) {
-        let track = $("#embed-player video")[0].addTextTrack("subtitles", "user_subitles", language);
-
-        subtitles[language].forEach(function(subtitle) {
-          var cue = new VTTCue(subtitle.start/1000, subtitle.end/1000, subtitle.text);
-          cue.id = subtitle.id;
-          cue.line = -4;
-          cue.size = 90;
-          track.addCue(cue);
-        });
-      }
-      player.initLanguages();
-  });
-}
-*/
-
-export const initialisePlayer = (playerWrapper, mediaUrl, mediaMode) => {
+export const initialisePlayer = (mediaUrl, mediaMode) => {
   let p = new EuropeanaMediaPlayer(playerWrapper, { manifest: mediaUrl }, { mode: 'player', manifest: mediaUrl });
   player = p.player;
 

@@ -1,5 +1,8 @@
-const includeCoverage = process.argv[3];
+const includeCoverage = process.argv[3] && process.argv[3].match('coverage');
+const accessibility = process.argv[3] && process.argv[3].match('accessibility');
+
 console.log(`Karma will${includeCoverage ? ' ' : ' NOT '}generate coverage`)
+
 const rules = () => {
   return [
     {
@@ -36,7 +39,7 @@ module.exports = function (config) {
     basePath: '',
     exclude: [],
     files: [
-      { pattern: 'tests/spec/*.js', watched: true, served: true, included: true },
+      { pattern: `./tests/spec/**/${accessibility ? 'accessibility' : '!(accessibility)'}.spec.js`, watched: true, type: 'module' },
       'https://code.jquery.com/jquery-3.4.1.min.js'
     ],
     autoWatch: true,
