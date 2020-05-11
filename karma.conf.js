@@ -12,7 +12,6 @@ const rules = () => {
     },
     {
       test: /\.[s]?css$/,
-      exclude: /(node_modules)/,
       loader: 'style-loader!css-loader!sass-loader'
     },
     ... includeCoverage ? [
