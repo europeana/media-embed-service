@@ -66,7 +66,7 @@ export const loadUrl = (manifest, urlParams) => {
       setEmbedDimensions(urlParams.get('width'), urlParams.get('height'), mediaMode === 'image');
     }
     if (['audio', 'video'].indexOf(mediaMode) > -1) {
-      initialisePlayer(manifest, mediaMode);
+      initialisePlayer(manifest, mediaMode, urlParams.get('language'));
     } else if (mediaMode === 'image') {
       const rootItem = manifestData.items[0];
       const imgUrl = rootItem.items[0].items[0].body.id;
@@ -75,7 +75,7 @@ export const loadUrl = (manifest, urlParams) => {
         playerWrapper.append(`<img src="${manifestData.items[0].items[0].items[0].body.id}" alt="">`);
       }
       playerWrapper.removeClass('loading');
-      initialiseAttribution(manifestData.items[0], mediaMode);
+      initialiseAttribution(manifestData.items[0], mediaMode, urlParams.get('language'));
     }
   });
 };
@@ -182,7 +182,8 @@ export const setEmbedDimensions = (w, h, noRatio) => {
   }
 };
 
-export const initialiseAttribution = (manifestJsonld, mediaMode) => {
+export const initialiseAttribution = (manifestJsonld, mediaMode, language) => {
+
   if (!manifestJsonld.requiredStatement && !manifestJsonld.requiredStatement.en[0]) {
     console.log('(no attribution found)');
     return;
@@ -238,9 +239,7 @@ export const initialiseAttribution = (manifestJsonld, mediaMode) => {
       btnInfo.removeClass('open');
     }
   });
-
-  setLinkElementData($('[data-name=title]'), manifestJsonld);
-
+  setLinkElementData($('[data-name=title]'), manifestJsonld, language);
   attribution.on('click', (e) => {
     if ((e.target.nodeName.toUpperCase() === 'A')) {
       e.stopPropagation();
@@ -264,10 +263,13 @@ export const initialiseAttribution = (manifestJsonld, mediaMode) => {
   });
 };
 
-export const setLinkElementData = ($el, manifest) => {
+export const setLinkElementData = ($el, manifest, language) => {
   if (manifest.label) {
-    const text = manifest.label[Object.keys(manifest.label)[0]];
-    $el.text(text);
+    if (language && manifest.label[language]) {
+      $el.text(manifest.label[language]);
+    } else {
+      $el.text(manifest.label[Object.keys(manifest.label)[0]]);
+    }
   }
   if (manifest.seeAlso && manifest.seeAlso.length > 0 && manifest.seeAlso[0].id) {
     let url = manifest.seeAlso[0].id;
@@ -280,14 +282,15 @@ export const setLinkElementData = ($el, manifest) => {
   }
 };
 
-export const initialiseEmbed = (mediaMode) => {
+export const initialiseEmbed = (mediaMode, language) => {
 
   playerWrapper.removeClass('loading');
 
   let manifestJsonld = player.manifest.__jsonld;
 
-  initialiseAttribution(manifestJsonld, mediaMode);
-  setLinkElementData($('.title-link'), manifestJsonld);
+  initialiseAttribution(manifestJsonld, mediaMode, language);
+  setLinkElementData($('.title-link'), manifestJsonld, language);
+
   $('.logo-link').removeAttr('style');
 
   if (duration === -1 && manifestJsonld.items[0].duration) {
@@ -295,20 +298,21 @@ export const initialiseEmbed = (mediaMode) => {
   }
 };
 
-export const initialisePlayer = (mediaUrl, mediaMode) => {
-  let p = new EuropeanaMediaPlayer(playerWrapper, { manifest: mediaUrl }, { mode: 'player', manifest: mediaUrl });
+export const initialisePlayer = (mediaUrl, mediaMode, language) => {
+  let p = new EuropeanaMediaPlayer(playerWrapper, { manifest: mediaUrl }, { mode: 'player', manifest: mediaUrl, language });
+
   player = p.player;
 
   player.avcomponent.on('mediaerror', () => {
     console.log('mediaerror (reinit)');
-    initialiseEmbed(mediaMode);
+    initialiseEmbed(mediaMode, language);
   });
   player.avcomponent.on('mediaready', () => {
     console.log('mediaready (reinit)');
     if (mediaMode === 'audio') {
       $('.eups-player').removeAttr('style');
     }
-    initialiseEmbed(mediaMode);
+    initialiseEmbed(mediaMode, language);
   });
   player.avcomponent.on('play', () => {
     playerWrapper.addClass('playing');
