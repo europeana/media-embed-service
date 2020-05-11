@@ -23,7 +23,7 @@
   },
   "dependencies": {
     "dotenv": "^8.2.0",
-    "europeanamediaplayer": "^0.5.25",
+    "europeanamediaplayer": "^0.6.0",
     "materialize-css": "^1.0.0",
     "placeload.js": "^1.0.4",
     "whatwg-fetch": "^3.0.0"
