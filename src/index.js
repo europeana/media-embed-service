@@ -38,10 +38,10 @@ window.addEventListener('load', () => {
     loadUrl(manifest, urlParams);
   } else if (urlParams.get('id')) {
     const id = urlParams.get('id');
-    if (id.match(/\/[a-z_0-9]+\/[a-z_0-9]+$/)) {
+    if (id.match(/[A-Za-z_0-9]+\/[A-Za-z_0-9]+$/)) {
       loadUrl(`${API_SERVER}/${id}/manifest?format=3&wskey=${API_KEY}`, urlParams);
     } else {
-      console.log('id invalid');
+      console.log('id invalid: ' + id);
     }
   } else {
     console.log('no manifest or id supplied');
