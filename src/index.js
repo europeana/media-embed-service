@@ -66,7 +66,7 @@ export const loadUrl = (manifest, urlParams) => {
       setEmbedDimensions(urlParams.get('width'), urlParams.get('height'), mediaMode === 'image');
     }
     if (['audio', 'video'].indexOf(mediaMode) > -1) {
-      initialisePlayer(manifest, mediaMode, urlParams.get('language'));
+      initialisePlayer(manifest, mediaMode, urlParams.get('lang'));
     } else if (mediaMode === 'image') {
       const rootItem = manifestData.items[0];
       const imgUrl = rootItem.items[0].items[0].body.id;
@@ -75,7 +75,7 @@ export const loadUrl = (manifest, urlParams) => {
         playerWrapper.append(`<img src="${manifestData.items[0].items[0].items[0].body.id}" alt="">`);
       }
       playerWrapper.removeClass('loading');
-      initialiseAttribution(manifestData.items[0], mediaMode, urlParams.get('language'));
+      initialiseAttribution(manifestData.items[0], mediaMode, urlParams.get('lang'));
     }
   });
 };
