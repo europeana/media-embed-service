@@ -1,5 +1,5 @@
 import './index.scss';
-const EuropeanaMediaPlayer = require('europeanamediaplayer').default;
+const EuropeanaMediaPlayer = require('@europeana/media-player');
 
 //localhost:9001?manifest=https%3A%2F%2Fiiif.europeana.eu%2F%2Fpresentation%2F%2F08609%2F%2Ffe9c5449_9522_4a70_951b_ef0b27893ae9%2F%2Fmanifest%3Fformat%3D3%26wskey%3Dapi2demo
 //const options = {embedid: "6FFlHN"};
@@ -220,7 +220,7 @@ export const initialiseAttribution = (manifestJsonld, mediaMode, language) => {
   }
   // END TMP CODE TO REMOVE
 
-  let btnInfoEl = $('<a class="btn btn-info" data-name="Info">' + svgData + '</a>');
+  let btnInfoEl = $('<button class="btn btn-info" data-name="Info">' + svgData + '</button>');
   let btnInfo = mediaMode === 'image' ? btnInfoEl.appendTo($('.info')) : btnInfoEl.insertAfter($('.time-display'));
   let attribution;
 
