@@ -5,3 +5,5 @@ public/bundle.js
 .env
 chromedriver.log
 geckodriver.log
+deploy/cloud-foundry/public/*
+!deploy/cloud-foundry/public/.keep
