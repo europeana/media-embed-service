@@ -32,17 +32,19 @@ window.addEventListener('load', () => {
   playerWrapper = $('.player-wrapper');
 
   const urlParams = new URL(windowLocationHref).searchParams;
-  const manifest = urlParams.get('manifest');
+  let manifest = urlParams.get('manifest');
 
-  if (manifest) {
-    loadUrl(manifest, urlParams);
-  } else if (urlParams.get('id')) {
-    const id = urlParams.get('id');
-    if (id.match(/[A-Za-z_0-9]+\/[A-Za-z_0-9]+$/)) {
-      loadUrl(`${API_SERVER}/${id}/manifest?format=3&wskey=${API_KEY}`, urlParams);
+  if (!manifest) {
+    const id = (urlParams.get('id')) ? urlParams.get('id') : window.location.pathname;
+    if (/^\/[0-9]+\/[a-zA-Z0-9_]+$/.test(id)) {
+      manifest = `${API_SERVER}${id}/manifest?format=3&wskey=${API_KEY}`;
     } else {
       console.log('id invalid: ' + id);
     }
+  }
+
+  if (manifest) {
+    loadUrl(manifest, urlParams);
   } else {
     console.log('no manifest or id supplied');
   }
