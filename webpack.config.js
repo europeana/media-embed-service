@@ -66,6 +66,7 @@ const config = function (mode) {
       contentBase: 'public',
       watchContentBase: true,
       compress: true,
+      historyApiFallback: true,
       hot: true,
       port: process.env.EMVE_PORT
     }

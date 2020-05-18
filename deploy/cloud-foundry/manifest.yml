@@ -1,0 +1,4 @@
+---
+buildpack: nginx_buildpack
+stack: cflinuxfs3
+memory: 64M

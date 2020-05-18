@@ -1,5 +1,5 @@
 import './index.scss';
-const EuropeanaMediaPlayer = require('europeanamediaplayer').default;
+const EuropeanaMediaPlayer = require('@europeana/media-player');
 
 //localhost:9001?manifest=https%3A%2F%2Fiiif.europeana.eu%2F%2Fpresentation%2F%2F08609%2F%2Ffe9c5449_9522_4a70_951b_ef0b27893ae9%2F%2Fmanifest%3Fformat%3D3%26wskey%3Dapi2demo
 //const options = {embedid: "6FFlHN"};
@@ -18,7 +18,6 @@ const EuropeanaMediaPlayer = require('europeanamediaplayer').default;
 let duration = -1;
 let player;
 let playerWrapper;
-let timeoutMouseMove;
 export { player };
 
 let windowLocationHref = window.location.href;
@@ -32,17 +31,19 @@ window.addEventListener('load', () => {
   playerWrapper = $('.player-wrapper');
 
   const urlParams = new URL(windowLocationHref).searchParams;
-  const manifest = urlParams.get('manifest');
+  let manifest = urlParams.get('manifest');
 
-  if (manifest) {
-    loadUrl(manifest, urlParams);
-  } else if (urlParams.get('id')) {
-    const id = urlParams.get('id');
-    if (id.match(/[A-Za-z_0-9]+\/[A-Za-z_0-9]+$/)) {
-      loadUrl(`${API_SERVER}/${id}/manifest?format=3&wskey=${API_KEY}`, urlParams);
+  if (!manifest) {
+    const id = (urlParams.get('id')) ? urlParams.get('id') : window.location.pathname;
+    if (/^\/[0-9]+\/[a-zA-Z0-9_]+$/.test(id)) {
+      manifest = `${API_SERVER}${id}/manifest?format=3&wskey=${API_KEY}`;
     } else {
       console.log('id invalid: ' + id);
     }
+  }
+
+  if (manifest) {
+    loadUrl(manifest, urlParams);
   } else {
     console.log('no manifest or id supplied');
   }
@@ -189,24 +190,6 @@ export const initialiseAttribution = (manifestJsonld, mediaMode, language) => {
     return;
   }
 
-  playerWrapper.on('mousemove', () => {
-    playerWrapper.addClass('moving');
-    if (timeoutMouseMove) {
-      window.clearTimeout(timeoutMouseMove);
-    }
-    timeoutMouseMove = setTimeout(() => {
-      playerWrapper.removeClass('moving');
-    }, 3000);
-  });
-
-  $('.options-container').on('mouseenter', () => {
-    playerWrapper.addClass('force-controls');
-  });
-
-  $('.options-container').on('mouseleave', () => {
-    playerWrapper.removeClass('force-controls');
-  });
-
   let svgData = '<svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"/><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>';
   let htmlAttribution = manifestJsonld.requiredStatement.en[0];
 
@@ -220,16 +203,19 @@ export const initialiseAttribution = (manifestJsonld, mediaMode, language) => {
   }
   // END TMP CODE TO REMOVE
 
-  let btnInfoEl = $('<a class="btn btn-info" data-name="Info">' + svgData + '</a>');
+  let btnInfoEl = $('<button class="btn btn-info" data-name="Info">' + svgData + '</button>');
   let btnInfo = mediaMode === 'image' ? btnInfoEl.appendTo($('.info')) : btnInfoEl.insertAfter($('.time-display'));
-  let attribution;
+
+  const attribution = $(htmlAttribution);
+  attribution.addClass('attribution');
+
+  // allow other menus to close this menu
+  attribution.attr('data-opener', 'Info');
 
   if (player) {
-    attribution = $(htmlAttribution).addClass('attribution').appendTo($('.canvas-container'));
-    // allow other menus to close this menu
-    attribution.attr('data-opener', 'Info');
+    btnInfo.after(attribution);
   } else {
-    attribution = $(htmlAttribution).addClass('attribution').appendTo($('.info'));
+    attribution.appendTo($('.info'));
   }
 
   btnInfo.on('open-close', (e, value) => {
@@ -263,6 +249,18 @@ export const initialiseAttribution = (manifestJsonld, mediaMode, language) => {
   });
 };
 
+const getTitle = (manifest, language) => {
+  if (manifest.label) {
+    if (language && manifest.label[language]) {
+      return manifest.label[language];
+    } else {
+      return manifest.label[Object.keys(manifest.label)[0]];
+    }
+  } else {
+    return null;
+  }
+};
+
 export const setLinkElementData = ($el, manifest, language) => {
   if (manifest.label) {
     if (language && manifest.label[language]) {
@@ -291,7 +289,7 @@ export const initialiseEmbed = (mediaMode, language) => {
   initialiseAttribution(manifestJsonld, mediaMode, language);
   setLinkElementData($('.title-link'), manifestJsonld, language);
 
-  $('.logo-link').removeAttr('style');
+  player.setTitle(getTitle(manifestJsonld, language));
 
   if (duration === -1 && manifestJsonld.items[0].duration) {
     duration = manifestJsonld.items[0].duration;
@@ -313,11 +311,5 @@ export const initialisePlayer = (mediaUrl, mediaMode, language) => {
       $('.eups-player').removeAttr('style');
     }
     initialiseEmbed(mediaMode, language);
-  });
-  player.avcomponent.on('play', () => {
-    playerWrapper.addClass('playing');
-  });
-  player.avcomponent.on('pause', () => {
-    playerWrapper.removeClass('playing');
   });
 };

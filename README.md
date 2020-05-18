@@ -34,9 +34,6 @@ Run unit tests with either of:
 Generate a coverage report with:
 * `npm run test:coverage`
 
-Run an accessibility test with:
-* `npm run test:accessibility`
-
 ### Development Server
 
 Run:
