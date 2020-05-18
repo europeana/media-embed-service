@@ -12,53 +12,6 @@ body {
   padding: 0;
 }
 
-/* Logo / link */
-
-.logo-link {
-  pointer-events: all;
-
-  .logo {
-    display: block;
-    max-width: 40px;
-    padding: $def-padding $def-padding 0 0;
-  }
-}
-
-.title-logo {
-  align-items: center;
-  background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0) 100%);
-  display: flex;
-  justify-content: space-between;
-}
-
-.title-link {
-  box-sizing: border-box;
-  color: #fff;
-  display: block;
-  font-size: 20px;
-  font-weight: bold;
-  line-height: 27px;
-  overflow: hidden;
-  padding: 0 $def-padding;
-  pointer-events: all;
-  position: relative;
-  text-decoration: none;
-  text-overflow: ellipsis;
-  top: 0;
-  transform: translateY(0);
-  white-space: nowrap;
-
-  @media (min-width: $bp-large) { // allow 2 lines
-    max-height: $title-height;
-    text-overflow: unset;
-    white-space: normal;
-  }
-
-  &:hover {
-    text-decoration: underline;
-  }
-}
-
 .attribution {
   background: #fff;
   border-radius: 4px;
@@ -104,7 +57,7 @@ body {
   max-height: 38px;
   overflow: hidden;
 
-  &:not(:first-child) {
+  &:not(:first-of-type) {
     margin-top: 6px;
   }
 
@@ -144,10 +97,6 @@ body {
   .btn.btn-info {
     font-size: 24px;
   }
-
-  .iiif-av-component .btn.btn-info {
-    width: 1.65em;
-  }
 }
 
 /* info button override for images */
@@ -174,12 +123,6 @@ body {
 .showing {
   display: block;
   transform: translateX(0);
-}
-
-.showing,
-.options-container,
-.title-link {
-  transition: transform 0.4s ease 0s;
 }
 
 .player-wrapper {
@@ -217,36 +160,6 @@ body {
     bottom: 56px;
     right: $def-padding;
   }
-
-  .options-container {
-    transform: translateY(0);
-  }
-}
-
-.playing {
-  .showing {
-    transform: translateX(calc(100% + 20px));
-  }
-
-  .options-container {
-    transform: translateY(calc(100% + 20px));
-  }
-
-  .title-link {
-    transform: translateY(calc(-100% - 20px));
-  }
-}
-
-.playing.force-controls,
-.playing.moving {
-  .showing {
-    transform: translateX(0);
-  }
-
-  .options-container,
-  .title-link {
-    transform: translateY(0);
-  }
 }
 
 @keyframes placeHolderShimmer {
@@ -262,15 +175,4 @@ body {
 .eups-player {
   position: absolute;
   top: 0;
-}
-
-.info {
-  bottom: 0;
-  color: #fff;
-  left: 0;
-  pointer-events: none;
-  position: absolute;
-  right: 0;
-  top: 0;
-  z-index: 2;
 }
