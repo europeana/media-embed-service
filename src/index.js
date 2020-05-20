@@ -204,7 +204,7 @@ export const initialiseAttribution = (manifestJsonld, mediaMode, language) => {
   // END TMP CODE TO REMOVE
 
   let btnInfoEl = $('<button class="btn btn-info" data-name="Info">' + svgData + '</button>');
-  let btnInfo = mediaMode === 'image' ? btnInfoEl.appendTo($('.info')) : btnInfoEl.insertAfter($('.time-display'));
+  let btnInfo = mediaMode === 'image' ? btnInfoEl.appendTo($('.info')) : btnInfoEl.insertAfter($('.volume'));
 
   const attribution = $(htmlAttribution);
   attribution.addClass('attribution');
