@@ -9,8 +9,8 @@ $gap-small: 8px;
 
 body {
   font-family: 'Open Sans', sans-serif;
-  min-width: 300px;
   margin: 0;
+  min-width: 300px;
   padding: 0;
 }
 
@@ -180,7 +180,6 @@ body {
 
 
 @media (min-width: $bp-min) {
-
   .audio,
   .video {
     .attribution {
