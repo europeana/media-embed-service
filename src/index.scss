@@ -2,13 +2,15 @@ $title-height: 54px;
 $def-padding: 16px;
 $mid-grey: #4b4b4b;
 
-$bp-med: 50em;
+$bp-min: 375px;
 $bp-large: 60em;
+$gap-large: $def-padding;
+$gap-small: 8px;
 
 body {
   font-family: 'Open Sans', sans-serif;
+  min-width: 300px;
   margin: 0;
-  min-width: 375px;
   padding: 0;
 }
 
@@ -157,7 +159,7 @@ body {
 
   .attribution {
     bottom: 56px;
-    right: $def-padding;
+    right: $gap-small;
   }
 }
 
@@ -174,4 +176,16 @@ body {
 .eups-player {
   position: absolute;
   top: 0;
+}
+
+
+@media (min-width: $bp-min) {
+
+  .audio,
+  .video {
+    .attribution {
+      right: $gap-large;
+    }
+  }
+
 }
