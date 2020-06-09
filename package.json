@@ -21,7 +21,7 @@
     "test:e2e:all": "npm run test:e2e:non-headless && npm run test:e2e:headless"
   },
   "dependencies": {
-    "@europeana/media-player": "^0.6.7",
+    "@europeana/media-player": "^0.7.3",
     "dotenv": "^8.2.0",
     "materialize-css": "^1.0.0",
     "placeload.js": "^1.0.4",
