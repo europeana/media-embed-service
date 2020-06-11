@@ -204,7 +204,7 @@ export const initialiseAttribution = (manifestJsonld, mediaMode, language) => {
   // END TMP CODE TO REMOVE
 
   let btnInfoEl = $('<button class="btn btn-info" data-name="Info">' + svgData + '</button>');
-  let btnInfo = mediaMode === 'image' ? btnInfoEl.appendTo($('.info')) : btnInfoEl.insertAfter($('.volume'));
+  let btnInfo = mediaMode === 'image' ? btnInfoEl.appendTo($('.player-wrapper')) : btnInfoEl.insertAfter($('.volume'));
 
   const attribution = $(htmlAttribution);
   attribution.addClass('attribution');
@@ -215,7 +215,7 @@ export const initialiseAttribution = (manifestJsonld, mediaMode, language) => {
   if (player) {
     btnInfo.after(attribution);
   } else {
-    attribution.appendTo($('.info'));
+    attribution.appendTo($('.player-wrapper'));
   }
 
   btnInfo.on('open-close', (e, value) => {

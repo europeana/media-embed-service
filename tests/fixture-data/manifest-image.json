@@ -1,0 +1,104 @@
+{
+  "@context" : [ "http://www.w3.org/ns/anno.jsonld", "http://iiif.io/api/presentation/3/context.json" ],
+  "id" : "http://localhost:8081/tests/fixture-data/manifest-image.json",
+  "type" : "Manifest",
+  "label" : {
+    "de" : [ "Billing, Hermann", "Berlin", "Reichskanzlei, Erweiterungsbau - Querschnitt A - B; Längsschnitt C - D; Seitenansicht nach D. Ehrendorf D. Reichskanzlerpalais; Hauptbau, Rückansicht; Wohnhaus, Ansicht, Rückansicht (Schnitte; Ansichten)" ]
+  },
+  "summary" : {
+    "de" : [ "Es gelten die Nutzungsbedingungen des Architekturmuseums der Technischen Universität München. (Bemerkung)" ]
+  },
+  "metaData" : [ {
+    "label" : {
+      "en" : [ "format" ]
+    },
+    "value" : {
+      "de" : [ "Transparentpapier (Material)", "Feder; Bleistift (Technik)" ]
+    }
+  }, {
+    "label" : {
+      "en" : [ "type" ]
+    },
+    "value" : {
+      "de" : [ "Plan" ]
+    }
+  } ],
+  "thumbnail" : [ {
+    "id": "http://localhost:8081/tests/fixture-data/manifest-image.json",
+    "type" : "Image"
+  } ],
+  "requiredStatement" : {
+    "en" : [ "<link rel='stylesheet' type='text/css' href='https://style.europeana.eu/attribution/style.css'/><div class='attribution'><span class='field'><span class='fname'>Title:</span><span class='fvalue' xml:lang = 'de'><a href='http://data.europeana.eu/item/211/item_22A6HX32H4NR55YDQOAI657OU3A65B4B' target='_blank' rel='noopener'>Billing, Hermann; Berlin; Reichskanzlei, Erweiterungsbau - Querschnitt A - B; Längsschnitt C - D; Seitenansicht nach D. Ehrendorf D. Reichskanzlerpalais; Hauptbau, Rückansicht; Wohnhaus, Ansicht, Rückansicht (Schnitte; Ansichten)</a></span></span><span class='field'><span class='fname'>Institution:</span><span class='fvalue'><a href='https://mediatum.ub.tum.de/?id=1257409' target='_blank' rel='noopener'>Architekturmuseum der Technischen Universität München</a></span></span><span class='field'><span class='fname'>Country:</span><span class='fvalue'>Germany</span></span><span class='field'><span class='fname'>Rights:</span><span class='fvalue'><ul class='rights-list'><li class='icon-cc'></li><li class='icon-by'></li><li class='icon-nc'></li><li class='icon-nd'></li></ul><a href='http://creativecommons.org/licenses/by-nc-nd/4.0/' target='_blank' rel='noopener'>CC BY-NC-ND</a></span></span></div>" ]
+  },
+  "rights" : {
+    "id" : "http://creativecommons.org/licenses/by-nc-nd/4.0/",
+    "type" : "Text",
+    "format" : "text/html"
+  },
+  "seeAlso" : [ {
+    "id" : "https://www.europeana.eu/api/v2/record/211/item_22A6HX32H4NR55YDQOAI657OU3A65B4B.json-ld",
+    "type" : "Dataset",
+    "format" : "application/ld+json",
+    "profile" : "http://www.europeana.eu/schemas/edm/"
+  }, {
+    "id" : "https://www.europeana.eu/api/v2/record/211/item_22A6HX32H4NR55YDQOAI657OU3A65B4B.json",
+    "type" : "Dataset",
+    "format" : "application/json",
+    "profile" : "http://www.europeana.eu/schemas/edm/"
+  }, {
+    "id" : "https://www.europeana.eu/api/v2/record/211/item_22A6HX32H4NR55YDQOAI657OU3A65B4B.rdf",
+    "type" : "Dataset",
+    "format" : "application/rdf+xml",
+    "profile" : "http://www.europeana.eu/schemas/edm/"
+  } ],
+  "start" : {
+    "id" : "https://iiif.europeana.eu/presentation/211/item_22A6HX32H4NR55YDQOAI657OU3A65B4B/canvas/p1",
+    "type" : "Canvas"
+  },
+  "items" : [ {
+    "id" : "https://iiif.europeana.eu/presentation/211/item_22A6HX32H4NR55YDQOAI657OU3A65B4B/canvas/p1",
+    "type" : "Canvas",
+    "label" : {
+      "@none" : [ "p. 1" ]
+    },
+    "height" : 2585,
+    "width" : 1993,
+    "requiredStatement" : {
+      "en" : [ "<link rel='stylesheet' type='text/css' href='https://style.europeana.eu/attribution/style.css'/><div class='attribution'><span class='field'><span class='fname'>Title:</span><span class='fvalue' xml:lang = 'de'><a href='http://data.europeana.eu/item/211/item_22A6HX32H4NR55YDQOAI657OU3A65B4B' target='_blank' rel='noopener'>Billing, Hermann; Berlin; Reichskanzlei, Erweiterungsbau - Querschnitt A - B; Längsschnitt C - D; Seitenansicht nach D. Ehrendorf D. Reichskanzlerpalais; Hauptbau, Rückansicht; Wohnhaus, Ansicht, Rückansicht (Schnitte; Ansichten)</a></span></span><span class='field'><span class='fname'>Institution:</span><span class='fvalue'><a href='https://mediatum.ub.tum.de/?id=1257409' target='_blank' rel='noopener'>Architekturmuseum der Technischen Universität München</a></span></span><span class='field'><span class='fname'>Country:</span><span class='fvalue'>Germany</span></span><span class='field'><span class='fname'>Rights:</span><span class='fvalue'><ul class='rights-list'><li class='icon-cc'></li><li class='icon-by'></li><li class='icon-nc'></li><li class='icon-nd'></li></ul><a href='http://creativecommons.org/licenses/by-nc-nd/4.0/' target='_blank' rel='noopener'>CC BY-NC-ND</a></span></span></div>" ]
+    },
+    "rights" : {
+      "id" : "http://creativecommons.org/licenses/by-nc-nd/4.0/",
+      "type" : "Text",
+      "format" : "text/html"
+    },
+    "items" : [ {
+      "type" : "AnnotationPage",
+      "items" : [ {
+        "type" : "Annotation",
+        "motivation" : "painting",
+        "body" : {
+          "id" : "http://localhost:8081/tests/fixture-data/manifest.jpeg",
+          "type" : "Image",
+          "format" : "image/jpeg"
+        },
+        "target" : "https://iiif.europeana.eu/presentation/211/item_22A6HX32H4NR55YDQOAI657OU3A65B4B/canvas/p1"
+      } ]
+    } ]
+  } ],
+  "provider" : [ {
+    "id" : "https://www.europeana.eu/en/about-us",
+    "type" : "Agent",
+    "logo" : [ {
+      "id" : "https://style.europeana.eu/images/europeana-logo-default.png",
+      "type" : "Image"
+    } ],
+    "homepage" : [ {
+      "id" : "https://www.europeana.eu",
+      "type" : "Text",
+      "label" : {
+        "en" : [ "Europeana" ]
+      },
+      "format" : "text/html"
+    } ]
+  } ]
+}
