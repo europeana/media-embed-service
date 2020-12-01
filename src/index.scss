@@ -21,8 +21,8 @@ body {
   color: #4d4d4d;
   display: none;
   font-size: 12px;
-  line-height: 18px;
   font-weight: normal;
+  line-height: 18px;
   max-width: 75%;
   padding: 12px;
   pointer-events: all;
@@ -38,16 +38,17 @@ body {
     text-decoration: underline;
   }
 
-  dt, dd {
+  dt,
+  dd {
     display: inline;
     margin: 0;
   }
 
-  dt:after {
+  dt::after {
     content: ': ';
   }
 
-  dd:after {
+  dd::after {
     content: '\a';
     white-space: pre;
   }
