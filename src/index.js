@@ -1,5 +1,5 @@
-import './index.scss';
 const EuropeanaMediaPlayer = require('@europeana/media-player');
+require('./index.scss');
 
 //localhost:9001?manifest=https%3A%2F%2Fiiif.europeana.eu%2F%2Fpresentation%2F%2F08609%2F%2Ffe9c5449_9522_4a70_951b_ef0b27893ae9%2F%2Fmanifest%3Fformat%3D3%26wskey%3Dapi2demo
 //const options = {embedid: "6FFlHN"};

@@ -7,6 +7,8 @@ $bp-large: 60em;
 $gap-large: $def-padding;
 $gap-small: 8px;
 
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,700italic,400,600,700&subset=latin,greek,cyrillic&display=swap');
+
 body {
   font-family: 'Open Sans', 'Arial', sans-serif;
   margin: 0;
