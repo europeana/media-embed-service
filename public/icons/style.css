@@ -10,6 +10,7 @@
   /* use !important to prevent issues with browser extensions that change fonts */
   font-family: 'icomoon' !important;
   speak: none;
+  font-size: 14px;
   font-style: normal;
   font-weight: normal;
   font-variant: normal;
@@ -19,6 +20,12 @@
   /* Better Font Rendering =========== */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+[class^="icon-"]:before,
+[class*=" icon-"]:before {
+  display:; inline-block;
+  margin-right: 4px;
 }
 
 .icon-by:before {
