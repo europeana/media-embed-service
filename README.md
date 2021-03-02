@@ -9,11 +9,10 @@ Created as part of the [Europeana Media Project](https://pro.europeana.eu/projec
 Install package dependencies:
 * `npm install`
 
-Create a `.env` file:
+Optionally, create a `.env` file:
 * `copy .env.example`
 * `supply values for:`
-  * API_KEY
-  * API_SERVER
+  * EUROPEANA_IIIF_PRESENTATION_API_URL
 
 ### Linting
 To lint-check the `.js` run:
