@@ -3,7 +3,4 @@ node_modules
 public/bundle.js
 .editorconfig
 .env
-chromedriver.log
-geckodriver.log
-deploy/cloud-foundry/public/*
-!deploy/cloud-foundry/public/.keep
+*.log
