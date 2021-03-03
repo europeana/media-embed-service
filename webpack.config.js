@@ -52,8 +52,9 @@ const config = function (mode) {
     },
     plugins: [
       new webpack.DefinePlugin({
-        API_KEY: JSON.stringify(process.env.API_KEY),
-        API_SERVER: JSON.stringify(process.env.API_SERVER)
+        EUROPEANA_IIIF_PRESENTATION_API_URL: JSON.stringify(
+          process.env.EUROPEANA_IIIF_PRESENTATION_API_URL || 'https://iiif.europeana.eu/presentation'
+        )
       }),
       new webpack.ProvidePlugin({
         $: "jquery"

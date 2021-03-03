@@ -36,7 +36,7 @@ window.addEventListener('load', () => {
   if (!manifest) {
     const id = (urlParams.get('id')) ? urlParams.get('id') : window.location.pathname;
     if (/^\/[0-9]+\/[a-zA-Z0-9_]+$/.test(id)) {
-      manifest = `${API_SERVER}${id}/manifest?format=3&wskey=${API_KEY}`;
+      manifest = `${EUROPEANA_IIIF_PRESENTATION_API_URL}${id}/manifest?format=3`;
     } else {
       console.log('id invalid: ' + id);
     }

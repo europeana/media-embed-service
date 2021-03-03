@@ -9,11 +9,10 @@ Created as part of the [Europeana Media Project](https://pro.europeana.eu/projec
 Install package dependencies:
 * `npm install`
 
-Create a `.env` file:
+Optionally, create a `.env` file:
 * `copy .env.example`
 * `supply values for:`
-  * API_KEY
-  * API_SERVER
+  * EUROPEANA_IIIF_PRESENTATION_API_URL
 
 ### Linting
 To lint-check the `.js` run:
@@ -43,7 +42,25 @@ to starts a dev server on port 9001.
 
 ### Build for production
 
-`npm run build`
+Build and run for production with the supplied [Dockerfile](./Dockerfile):
+
+```
+docker build -t europeana/media-embed-service .
+docker run \
+  --restart=unless-stopped --port 8080:80 \
+  --detach --name europeana-media-embed-service \
+  europeana/media-embed-service
+```
+
+Pre-built, versioned images are published to
+[Docker Hub](https://hub.docker.com/r/europeana/media-embed-service):
+```
+docker pull europeana/media-embed-service:${VERSION}
+docker run \
+  --restart=unless-stopped --port 8080:80 \
+  --detach --name europeana-media-embed-service \
+  europeana/media-embed-service:${VERSION}
+```
 
 ### Use
 
@@ -65,3 +82,10 @@ The following parameters are accepted:
 * [image](https://embed.europeana.eu/2021672/resource_document_mauritshuis_670?width=800&height=300)
 * [image](https://embed.europeana.eu/2021672/resource_document_mauritshuis_670?xywh=2534,0,2534,3000&width=800&height=300) (cropped)
 * [image](https://embed.europeana.eu/2021672/resource_document_mauritshuis_670?xywh=percent:0,0,50,50) (cropped using percentages)
+
+
+## License
+
+Licensed under the EUPL v1.2.
+
+For full details, see [LICENSE.md](LICENSE.md).
