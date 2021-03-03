@@ -64,3 +64,10 @@ The following parameters are accepted:
 * [image](https://embed.europeana.eu/2021672/resource_document_mauritshuis_670?width=800&height=300)
 * [image](https://embed.europeana.eu/2021672/resource_document_mauritshuis_670?xywh=2534,0,2534,3000&width=800&height=300) (cropped)
 * [image](https://embed.europeana.eu/2021672/resource_document_mauritshuis_670?xywh=percent:0,0,50,50) (cropped using percentages)
+
+
+## License
+
+Licensed under the EUPL v1.2.
+
+For full details, see [LICENSE.md](LICENSE.md).

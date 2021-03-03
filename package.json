@@ -2,6 +2,7 @@
   "name": "media-embed-service",
   "version": "0.2.0",
   "private": true,
+  "license": "EUPL-1.2",
   "scripts": {
     "build": "webpack-cli",
     "lint": "npx eslint src/",
