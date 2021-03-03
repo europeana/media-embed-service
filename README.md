@@ -42,7 +42,25 @@ to starts a dev server on port 9001.
 
 ### Build for production
 
-`npm run build`
+Build and run for production with the supplied [Dockerfile](./Dockerfile):
+
+```
+docker build -t europeana/media-embed-service .
+docker run \
+  --restart=unless-stopped --port 8080:80 \
+  --detach --name europeana-media-embed-service \
+  europeana/media-embed-service
+```
+
+Pre-built, versioned images are published to
+[Docker Hub](https://hub.docker.com/r/europeana/media-embed-service):
+```
+docker pull europeana/media-embed-service:${VERSION}
+docker run \
+  --restart=unless-stopped --port 8080:80 \
+  --detach --name europeana-media-embed-service \
+  europeana/media-embed-service:${VERSION}
+```
 
 ### Use
 

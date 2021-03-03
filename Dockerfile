@@ -1,3 +1,6 @@
+# Builds an image with the client-side JS bundle for the media embed service,
+# served by an NGINX with support for Europeana identifier URL paths.
+
 FROM nginx:stable-alpine
 
 ENV EUROPEANA_IIIF_PRESENTATION_API_URL=https://iiif.europeana.eu/presentation \
