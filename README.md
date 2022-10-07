@@ -78,10 +78,8 @@ The following parameters are accepted:
 ### Examples
 
 * [audio](https://embed.europeana.eu/2059213/data_sounds_8961?width=960&height=320)
-* [video](https://embed.europeana.eu/2051926/data_euscreenXL_EUS_3C083B8925D2E14C954507769E47992A)
-* [image](https://embed.europeana.eu/2021672/resource_document_mauritshuis_670?width=800&height=300)
-* [image](https://embed.europeana.eu/2021672/resource_document_mauritshuis_670?xywh=2534,0,2534,3000&width=800&height=300) (cropped)
-* [image](https://embed.europeana.eu/2021672/resource_document_mauritshuis_670?xywh=percent:0,0,50,50) (cropped using percentages)
+* [video](https://embed.europeana.eu/08626/1037479000000107017)
+* [image](https://embed.europeana.eu/9200579/ttrd4h35)
 
 
 ## License
